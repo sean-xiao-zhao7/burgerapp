@@ -1,0 +1,9 @@
+.Finish {
+    margin: auto 30%;
+}
+
+.Finish button {
+    color: black;
+    display: block;
+    margin: 10px auto;
+}

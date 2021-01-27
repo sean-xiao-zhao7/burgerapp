@@ -1,19 +1,29 @@
 import "./App.css";
+import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
 
 import Layout from "./hoc/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuilder";
-import { Component } from "react";
+import Checkout from "./containers/Checkout/Checkout";
+import MyOrders from "./containers/MyOrders/MyOrders";
 
 class App extends Component {
     state = {
         show: true,
     };
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
-        return <Layout>{this.state.show ? <BurgerBuilder /> : null}</Layout>;
+        return (
+            <Layout>
+                <Switch>
+                    <Route path="/" exact component={BurgerBuilder} />
+                    <Route path="/checkout" component={Checkout} />
+                    <Route path="/myorders" component={MyOrders} />
+                </Switch>
+            </Layout>
+        );
     }
 }
 

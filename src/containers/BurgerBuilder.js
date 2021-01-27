@@ -1,13 +1,12 @@
-import { Component } from "react";
+import React, { Component } from "react";
+import axios from "../axios-orders";
 
-import React from "react";
 import Burger from "../components/Burger/Burger";
 import BuildControls from "../components/Burger/BuildControls/BuildControls";
-import Aux from "../hoc/Aux";
 import Modal from "../components/UI/Modal/Modal";
 import OrderSummary from "../components/Burger/OrderSummary/OrderSummary";
-import axios from "../axios-orders";
 import Spinner from "../components/UI/Spinner/Spinner";
+import Aux from "../hoc/Aux";
 import withErrorHandler from "../hoc/withErrorHandler/withErrorHandler";
 
 const INGREDIENTS_PRICES = {
@@ -23,8 +22,6 @@ class BurgerBuilder extends Component {
         totalPrice: 5, // base price of 5 rupees
         canOrder: true,
         orderModal: false,
-        orderConfirmed: false,
-        loading: false,
         error: null,
     };
 
@@ -38,29 +35,18 @@ class BurgerBuilder extends Component {
     }
 
     confirmOrder = () => {
-        this.setState({ orderConfirmed: true, loading: true });
-        const burgerOrder = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: "Max",
-                address: {
-                    street: "Test street",
-                    zipCode: "123123",
-                    country: "Germany",
-                },
-                email: "test@test.com",
-            },
-            deliveryMethod: "fastest",
-        };
-        axios
-            .post("/burger-orders.json", burgerOrder)
-            .then((response) => {
-                this.setState({ loading: false, orderModal: false });
-            })
-            .catch((error) => {
-                this.setState({ loading: false, orderModal: false });
-            });
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(
+                encodeURIComponent(i) +
+                    "=" +
+                    encodeURIComponent(this.state.ingredients[i])
+            );
+        }
+        queryParams.push(encodeURIComponent('totalPrice') + '=' + encodeURIComponent(this.state.totalPrice));
+        const queryString = queryParams.join("&");
+
+        this.props.history.push({ pathname: "/checkout", search: queryString });
     };
 
     closeOrderModal = () => {
