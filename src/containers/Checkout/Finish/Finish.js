@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classes from "./Finish.module.css";
 import axios from "../../../axios-orders";
+import { connect } from "react-redux";
 
 import Button from "../../../components/UI/Button/Button";
 import Spinner from "../../../components/UI/Spinner/Spinner";
@@ -76,6 +77,12 @@ class Finish extends Component {
         error: null,
     };
 
+    componentDidMount() {
+        if (this.props.reduxTotalPrice <= 5) {
+            this.props.history.push("/");
+        }
+    }
+
     checkValid = (value, rules) => {
         let isValid = true;
         if (rules.required) {
@@ -95,8 +102,8 @@ class Finish extends Component {
         }
 
         const burgerOrder = {
-            ingredients: this.props.ingredients,
-            price: this.props.totalPrice,
+            ingredients: this.props.reduxIngredients,
+            price: this.props.reduxTotalPrice,
             personalInfo: personalInfo,
         };
 
@@ -201,4 +208,11 @@ class Finish extends Component {
     }
 }
 
-export default Finish;
+const mapStateToProps = (state) => {
+    return {
+        reduxIngredients: state.ingredients,
+        reduxTotalPrice: state.totalPrice,
+    };
+};
+
+export default connect(mapStateToProps)(Finish);

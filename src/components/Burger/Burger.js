@@ -6,10 +6,17 @@ import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
 import classes from "./Burger.module.css";
 
 class Burger extends Component {
-    sum = Object.values(this.props.ingredients).reduce(
-        (curr, next) => curr + next,
-        0
-    );
+    state = {
+        sum: 0,
+    };
+
+    componentDidMount() {
+        let sum = Object.values(this.props.ingredients).reduce(
+            (curr, next) => curr + next,
+            0
+        );
+        this.setState({sum: sum});
+    }
 
     render() {
         if (this.sum <= 0) {

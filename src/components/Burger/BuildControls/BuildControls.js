@@ -21,10 +21,10 @@ const buildControls = (props) => {
                         label={control.label}
                         type={control.type}
                         key={index}
-                        addIngredientHandler={() =>
+                        addIngredientHandler={() => {
                             props.addIngredientHandler(control.type)
-                        }
-                        removeIngredientHandler={() =>
+                        }}
+                        removeIngredientHandler={() => 
                             props.removeIngredientHandler(control.type)
                         }
                         isDisabled={props.disabledInfo[control.type]}
