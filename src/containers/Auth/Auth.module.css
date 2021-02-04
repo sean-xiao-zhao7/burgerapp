@@ -1,0 +1,9 @@
+.Auth {
+    margin: auto 30%;
+}
+
+.Auth button {
+    color: black;
+    display: block;
+    margin: 10px auto;
+}

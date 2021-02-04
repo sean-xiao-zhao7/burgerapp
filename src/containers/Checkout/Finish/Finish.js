@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import classes from "./Finish.module.css";
-import axios from "../../../axios-orders";
 import { connect } from "react-redux";
+import axios from "../../../axios-orders";
 
 import Button from "../../../components/UI/Button/Button";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
+import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
+
+//redux
+import * as orderActions from "../../../store/actions/order";
 
 class Finish extends Component {
     state = {
@@ -68,17 +72,15 @@ class Finish extends Component {
                         { value: "cheapest", label: "You Cheap Bastard" },
                     ],
                 },
-                value: "",
+                value: "fastest",
             },
             overallValid: false,
         },
         orderConfirmed: false,
-        loading: false,
-        error: null,
     };
 
     componentDidMount() {
-        if (this.props.reduxTotalPrice <= 5) {
+        if (this.props.reduxTotalPrice <= 0) {
             this.props.history.push("/");
         }
     }
@@ -105,17 +107,10 @@ class Finish extends Component {
             ingredients: this.props.reduxIngredients,
             price: this.props.reduxTotalPrice,
             personalInfo: personalInfo,
+            localId: this.props.authReducerLocalId,
         };
 
-        axios
-            .post("/burger-orders.json", burgerOrder)
-            .then((response) => {
-                this.setState({ loading: false });
-                this.props.history.push("/");
-            })
-            .catch((error) => {
-                this.setState({ loading: false });
-            });
+        this.props.purchaseBurger(burgerOrder, this.props.authReducerIdToken);
     };
 
     onChangeHandler = (e, id) => {
@@ -167,7 +162,7 @@ class Finish extends Component {
         }
 
         let form = <Spinner />;
-        if (!this.state.loading) {
+        if (!this.props.reduxLoading) {
             form = (
                 <form onSubmit={this.onClick}>
                     {formElements.map((formElement) => {
@@ -210,9 +205,23 @@ class Finish extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        reduxIngredients: state.ingredients,
-        reduxTotalPrice: state.totalPrice,
+        reduxIngredients: state.burgerBuilder.ingredients,
+        reduxTotalPrice: state.burgerBuilder.totalPrice,
+        reduxLoading: state.order.loading,
+        authReducerIdToken: state.authReducer.idToken,
+        authReducerLocalId: state.authReducer.localId,
     };
 };
 
-export default connect(mapStateToProps)(Finish);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        purchaseBurger: (orderData, idToken) => {
+            dispatch(orderActions.purchaseBurger(orderData, idToken));
+        },
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withErrorHandler(Finish, axios));

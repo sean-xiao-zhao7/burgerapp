@@ -5,8 +5,10 @@ import classes from "./NavigationItems.module.css";
 const navigationItems = (props) => {
     return (
         <ul className={classes.NavigationItems}>
-            <NavgiationItem link="/">Burger Builder</NavgiationItem>
-            <NavgiationItem link="/myorders">My Orders</NavgiationItem>
+            <NavgiationItem link="/" show>Burger Builder</NavgiationItem>
+            <NavgiationItem link="/login" show={!props.authReduceridToken}>Login</NavgiationItem>
+            <NavgiationItem link="/myorders" show={props.authReduceridToken}>My Orders</NavgiationItem>
+            <NavgiationItem link="/logout" show={props.authReduceridToken}>Logout</NavgiationItem>
         </ul>
     );
 };

@@ -27,15 +27,15 @@ class OrderSummary extends Component {
                     <div>
                         Price before tax: {this.props.totalPrice.toFixed(2)} rupees
                     </div>
-                    <div>Tax: {this.props.totalPrice.toFixed(2) * 3.6} rupees</div>
+                    <div>Tax: {(this.props.totalPrice * 3.6).toFixed(2)} rupees</div>
                     <div>
-                        Service fee: {this.props.totalPrice.toFixed(2) * 2.8} rupees
+                        Service fee: {(this.props.totalPrice * 2.8).toFixed(2)} rupees
                     </div>
                     <div>
-                        Gratuities: {this.props.totalPrice.toFixed(2) * 2.7} rupees
+                        Gratuities: {(this.props.totalPrice * 2.7).toFixed(2)} rupees
                     </div>
                     <div>
-                        Final price: {this.props.totalPrice.toFixed(2) * 10.1} rupees
+                        Final price: {(this.props.totalPrice * 10.1).toFixed(2)} rupees
                     </div>
                     <Button onClick={this.props.confirmOrder} buttonType={"Success"}>
                         Confirm & Agree to share us your personal info (18+)

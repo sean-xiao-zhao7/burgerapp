@@ -22,9 +22,9 @@ const buildControls = (props) => {
                         type={control.type}
                         key={index}
                         addIngredientHandler={() => {
-                            props.addIngredientHandler(control.type)
+                            props.addIngredientHandler(control.type);
                         }}
-                        removeIngredientHandler={() => 
+                        removeIngredientHandler={() =>
                             props.removeIngredientHandler(control.type)
                         }
                         isDisabled={props.disabledInfo[control.type]}
@@ -36,7 +36,9 @@ const buildControls = (props) => {
                 disabled={!props.canOrder}
                 onClick={props.updateOrderModal}
             >
-                Place order
+                {props.authReducerIdToken
+                    ? "Place order"
+                    : "Sign up and give us your money!!"}
             </button>
         </div>
     );

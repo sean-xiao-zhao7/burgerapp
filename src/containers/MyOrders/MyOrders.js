@@ -1,45 +1,59 @@
 import React, { Component } from "react";
-// import classes from "./MyOrders.module.css";
+import { connect } from "react-redux";
 import axios from "../../axios-orders";
 
-import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import Order from "../../components/Order/Order/Order";
 
-class MyOrders extends Component {
-    state = {
-        orders: [],
-        loading: true,
-    };
+import * as orderActions from "../../store/actions/index";
 
+class MyOrders extends Component {
     componentDidMount() {
-        axios
-            .get("burger-orders.json")
-            .then((r) => {
-                const done = [];
-                for (let i in r.data) {
-                    done.push({
-                        ...r.data[i],
-                        id: i
-                    });
-                }
-                this.setState({ orders: done, loading: false });
-            })
-            .catch((e) => {
-                console.log(e.message);
-                this.setState({ loading: false });
-            });
+        this.props.fetchMyOrdersAxios(
+            this.props.authReducerIdToken,
+            this.props.authReducerLocalId
+        );
     }
 
     render() {
+        let slogan = "Give us your money";
+        if (this.props.reduxMyOrders.length > 0) {
+            slogan = "Thanks 4 your money";
+        }
         return (
             <div>
-                <h1>Your orders sucker</h1>
-                {this.state.orders.map((order, index) => {
-                    return <Order key={order.id} index={index} ingredients={order.ingredients} totalPrice={+order.price} />
+                <h1>{slogan}</h1>
+                {this.props.reduxMyOrders.map((order, index) => {
+                    return (
+                        <Order
+                            key={order.id}
+                            index={index}
+                            ingredients={order.ingredients}
+                            totalPrice={+order.price}
+                        />
+                    );
                 })}
             </div>
         );
     }
 }
 
-export default withErrorHandler(MyOrders, axios);
+const mapStateToProps = (state) => {
+    return {
+        reduxMyOrders: state.order.orders,
+        authReducerIdToken: state.authReducer.idToken,
+        authReducerLocalId: state.authReducer.localId,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchMyOrdersAxios: (idToken, localId) =>
+            dispatch(orderActions.fetchMyOrdersAxios(idToken, localId)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withErrorHandler(MyOrders, axios));
